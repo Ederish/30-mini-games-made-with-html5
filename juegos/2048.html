@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html>
+    <audio style="display: none;" controls autoplay="true" loop="true" id="audio"><source src="menu.mp3" type="audio/mp3"></audio>
+<head>
+     <script>
+function randInt(min, max){return ~~(Math.random() * (max - min)) + min}
+
+// X координата в пиксельное положение на сетке
+function xIntToPx(x){return  40 + x*12 + (x-1)*85 + 'px'}
+
+// Y координата в пиксельное положение на сетке
+function yIntToPx(y){return 160 + y*12 + (y-1)*85 + 'px'}
+
+// Переменные
+var blocks = []
+var score = 0, 
+bestScore = 0,
+lastMoveTime = new Date()
+
+// Новая игра
+function newGame(){
+    
+    for (i = 0; i < blocks.length; i++){
+        game.removeChild(blocks[i].DOM)
+    }
+
+    blocks = []
+
+    score = 0
+    document.getElementById('score-output').innerHTML = 0
+
+    appendBlock2()
+}
+window.onload = newGame
+
+// Добавление двойки в рандомную позицию 
+function appendBlock2(){
+
+    if (blocks.length == 16) return checkForLoss()
+
+    x = randInt(1, 5)
+    y = randInt(1, 5)
+
+    for (i = 0; i < blocks.length; i++){
+        if (blocks[i].x == x && blocks[i].y == y){
+            return appendBlock2()
+        }
+    }
+
+    newBlock(x, y, 2)
+}
+
+// Проверка на отсутствие ходов
+function checkForLoss(){
+    for (i = 0; i <  blocks.length; i++){
+        for (j = 0; j < blocks.length; j++){
+            if (blocks[i].class == blocks[j].class && ((Math.abs(blocks[i].x - blocks[j].x) == 1 && blocks[i].y == blocks[j].y) || (Math.abs(blocks[i].y - blocks[j].y) == 1 && blocks[i].x == blocks[j].x))) {
+                return
+            }
+        }
+    }
+    newGame()
+}
+
+// Создание нового блока
+function newBlock(x, y, value){
+    block = document.createElement("div");
+    block.className = 'block-'+value+' blocks'
+    block.innerHTML = value
+
+    block.style.left = xIntToPx(x)
+    block.style.top  = yIntToPx(y)
+
+    blocks.push({
+        x: x,
+        y: y,
+        class: value,
+        DOM: block
+    })
+
+    game.appendChild(block)
+
+    setTimeout(function(){
+        block.style.transform = 'scale(1.1)'
+        setTimeout(function(){
+            block.style.transform = 'scale(1.0)'
+        }, 150)
+    }, 50)
+}
+
+//Перемещение
+function move(direction){
+    for (_ = 0; _ < 4; _++){
+        for (i = 0; i < blocks.length; i++){
+            (function(){
+                for (j = 0; j < blocks.length; j++){
+                    if (direction == 'left'  && (blocks[i].x == 1 || (blocks[i].x-1 == blocks[j].x && blocks[i].y == blocks[j].y))) return
+                    if (direction == 'right' && (blocks[i].x == 4 || (blocks[i].x+1 == blocks[j].x && blocks[i].y == blocks[j].y))) return
+                    if (direction == 'up'    && (blocks[i].y == 1 || (blocks[i].y-1 == blocks[j].y && blocks[i].x == blocks[j].x))) return
+                    if (direction == 'down'  && (blocks[i].y == 4 || (blocks[i].y+1 == blocks[j].y && blocks[i].x == blocks[j].x))) return
+                }
+                (direction == 'left') ? blocks[i].x-- : (direction == 'right') ? blocks[i].x++ : (direction == 'up') ? blocks[i].y-- : (direction == 'down') ? blocks[i].y++ : NaN
+            })()
+        }
+    }
+    draw()
+    collisionCheck(direction)
+}
+
+// Отрисовка блоков по их координатам
+function draw(){
+    for (d = 0; d < blocks.length; d++){
+        blocks[d].DOM.style.left = xIntToPx(blocks[d].x)
+        blocks[d].DOM.style.top  = yIntToPx(blocks[d].y)
+    }
+}
+
+// Проверка на одинаковые блоки
+function collisionCheck(direction){
+    (direction == 'left' || direction == 'up') ? offset = 2 : (direction == 'right' || direction == 'down') ? offset = 3 : NaN
+    for (_ = 0; _ < 4; _++){
+        while (((direction == 'left' || direction == 'up') && offset <= 4) || ((direction == 'right' || direction == 'down') && offset >= 1)){
+            for (i = 0; i < blocks.length; i++){
+                if (((direction == 'left' || direction == 'right') && blocks[i].x != offset) || ((direction == 'up' || direction == 'down') && blocks[i].y != offset)) continue
+                if ((direction == 'left'  && blocks[i].x == 1) || (direction == 'up'   && blocks[i].y == 1)) continue
+                if ((direction == 'right' && blocks[i].x == 4) || (direction == 'down' && blocks[i].y == 4)) continue
+                for (j = 0; j < blocks.length; j++){
+                    if (blocks[i].class == blocks[j].class){
+                        if (direction == 'left'  && (blocks[i].x-1 == blocks[j].x && blocks[i].y == blocks[j].y)){
+                            return collision(blocks[i], blocks[j], direction)
+                        }
+                        if (direction == 'right' && (blocks[i].x+1 == blocks[j].x && blocks[i].y == blocks[j].y)){
+                            return collision(blocks[i], blocks[j], direction)
+                        }
+                        if (direction == 'up'    && (blocks[i].y-1 == blocks[j].y && blocks[i].x == blocks[j].x)){
+                            return collision(blocks[i], blocks[j], direction)
+                        }
+                        if (direction == 'down'  && (blocks[i].y+1 == blocks[j].y && blocks[i].x == blocks[j].x)){
+                            return collision(blocks[i], blocks[j], direction)
+                        }
+                    }
+                }
+            }
+            (direction == 'left' || direction == 'up') ? offset++ : (direction == 'right' || direction == 'down') ? offset-- : NaN
+        }
+    }
+    lastMoveTime = new Date()
+    setTimeout(appendBlock2, 200)
+}
+
+// Соединение двух блоков
+function collision(firstBlock, secondBlock, direction){
+
+    firstBlock.DOM.style.zIndex = '100'
+    firstBlock.DOM.style.left = xIntToPx(secondBlock.x)
+    firstBlock.DOM.style.top  = yIntToPx(secondBlock.y)
+
+    setTimeout(function(){
+        game.removeChild(firstBlock.DOM)
+        game.removeChild(secondBlock.DOM)
+
+        updateScore(secondBlock.class*2)
+
+        newBlock(secondBlock.x, secondBlock.y, secondBlock.class*2)
+
+        blocks.splice(blocks.indexOf(firstBlock),  1)
+        blocks.splice(blocks.indexOf(secondBlock), 1)
+
+        setTimeout(function(){
+            move(direction)
+        }, 30)
+        lastMoveTime = new Date()
+    }, 200)
+}
+
+// Обновление счёта
+function updateScore(value){
+    score += value
+
+    if (score > bestScore) {
+        bestScore = score
+        document.getElementById('best-score-output').style.transform = 'scale(1.2)'
+        document.getElementById('best-score-output').innerHTML = bestScore
+        setTimeout(function(){
+            document.getElementById('best-score-output').style.transform = 'scale(1.0)'
+        }, 200)
+    }
+
+    document.getElementById('score-output').style.transform = 'scale(1.2)'
+    document.getElementById('score-output').innerHTML = score
+    setTimeout(function(){
+        document.getElementById('score-output').style.transform = 'scale(1.0)'
+    }, 200)
+}
+
+// Управление кнопками
+window.onkeydown = function(event){
+    if (new Date() - lastMoveTime > 300){
+        lastMoveTime = new Date()
+        if (event.keyCode == 37 || event.keyCode == 65) move('left')  // > || d
+        if (event.keyCode == 38 || event.keyCode == 87) move('up')    // ^ || w
+        if (event.keyCode == 39 || event.keyCode == 68) move('right') // < || a
+        if (event.keyCode == 40 || event.keyCode == 83) move('down')  // v || s
+        if (event.keyCode == 67) changeTheme() // C
+        if (event.keyCode == 82) newGame() // R
+    }
+}
+
+//Управление свайпами мышки
+window.onmousedown = function(event){
+    if (new Date() - lastMoveTime > 300 && event.clientY > 160){
+        xFirst = event.clientX
+        yFirst = event.clientY
+        window.onmousemove = function(event){
+            lastMoveTime = new Date()
+            xSecond = event.clientX
+            ySecond = event.clientY
+
+            xDifferent = xFirst - xSecond
+            yDifferent = yFirst - ySecond
+
+            if (Math.abs(xDifferent) > Math.abs(yDifferent)){
+                if (xDifferent > 0) move('left')
+                else move('right')
+            }
+            else {
+                if (yDifferent > 0) move('up')
+                else move('down')
+            }
+             window.onmousemove = null
+        }
+    }
+}
+window.onmouseup = function(){
+    window.onmousemove = null
+}
+
+// Управление свайпами по экрану
+window.addEventListener('touchstart', handleTouchStart)
+window.addEventListener('touchmove',   handleTouchMove)
+
+function handleTouchStart(event){
+    document.getElementsByTagName('body')[0].style.transform = 'scale(.75)'
+    document.getElementsByTagName('body')[0].style.transformOrigin = '0 0'
+    if (new Date() - lastMoveTime > 300){
+        firstTouch = event.touches[0]
+        xDown = firstTouch.clientX
+        yDown = firstTouch.clientY
+    }
+}
+
+function handleTouchMove(event){
+    if (!xDown || !yDown) return
+    var xUp = event.touches[0].clientX
+    var yUp = event.touches[0].clientY
+    var xDifferent = xDown - xUp
+    var yDifferent = yDown - yUp
+    if ( Math.abs(xDifferent) > Math.abs(yDifferent)) {
+        if ( xDifferent > 0 ) move('left')
+        else move('right')
+    } 
+    else {
+        if ( yDifferent > 0 ) move('up')
+        else direction = move('down')
+    }
+    xDown = null
+    yDown = null
+}
+
+// Смена темы
+theme = 'light'
+if (new Date().getHours() >= 20 || new Date().getHours() <= 7) setTimeout(changeTheme, 1000)
+
+function changeTheme(){
+    if (theme == 'dark'){
+        theme = 'light'
+        document.getElementById('selected-theme').innerHTML = 'Light'
+        document.getElementById('style').href = 'https://dl.dropbox.com/s/m1vyfaf2xxvsklv/light.css?raw=1'
+    }
+    else {
+        theme = 'dark'
+        document.getElementById('selected-theme').innerHTML = 'Dark'
+        document.getElementById('style').href = 'https://dl.dropbox.com/s/5qhgv3z2660g87x/dark.css?raw=1'
+    }
+} 
+     </script>  
+    <meta charset = 'UTF-8'>
+    <link id = 'style' rel = 'stylesheet' href = 'style.css'>
+
+</head>
+<style>
+    * {
+	transition: .2s;
+	-webkit-user-select: none;
+	margin:  0;
+	padding: 0;
+	font-family: Arial;
+}::-webkit-scrollbar{display: none;}
+body {
+	background: #FEF8F1;
+	width:  100vw;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/* Кнопки */
+.button {
+	outline: none;
+	border: none;
+}
+
+/* Игровое поле */
+#game {
+	background: #FEF8F1;
+	width:  480px;
+	height: 600px;
+}
+
+/* Надпись 2048 */
+#title {
+	transition: .1s;
+	position: absolute;
+	color: #756F68;
+	font-size: 60px;
+	left: 40px;
+	top:  36px;
+}
+
+.score-block {
+	background: #CBB9B4;
+	position: absolute;
+	color: #FFF;
+	font-size: 18px;
+	width: 95px;
+	height: 43px;
+	border-radius: 2px;
+}
+
+/* Блок со счётом */
+#score {
+	left: 245px;
+	top: 50px;
+}
+/* Вывод счёта */
+#score-output {
+	display: inline-block;
+	transition: .2s;
+	font-weight: bold;
+}
+
+/* Блок лучшего счёта */
+#best-score {
+	left: 345px;
+	top: 50px;
+}
+/* Вывод лучшего счёта */
+#best-score-output {
+	display: inline-block;
+	transition: .2s;
+	font-weight: bold;
+}
+
+/* Кнопка новой игры */
+#new-game {
+	transition: .2s;
+	background: #907A69;
+	position: absolute;
+	color: #FFF;
+	font-size: 16px;
+	width: 95px;
+	height: 30px;
+	left: 345px;
+	top: 110px;
+	border-radius: 2px;}
+#new-game:hover {
+	background: #b59984;
+}
+
+/* Кнопка смены темы */
+#theme-change-button {
+	transition: .2s;
+	background: #907A69;
+	position: absolute;
+	color: #FFF;
+	font-size: 16px;
+	width: 95px;
+	height: 30px;
+	left: 245px;
+	top: 110px;
+	border-radius: 2px;}
+#theme-change-button:hover {
+	background: #b59984;
+}
+
+/* Сетка для блоков */
+#game-grid {
+	position: absolute;
+	background: #BDACA2;
+	width:  400px;
+	height: 400px;
+	left: 40px;
+	top:  160px;
+	border-radius: 5px;
+	border-spacing: 12px;
+}
+
+/* Клетки сетки */
+td {
+	background: #CCC0B4;
+	width:  85px;
+	height: 85px;
+	border-radius: 5px;
+}
+
+/* Блоки */
+.blocks {
+	transition: 150ms transform, 250ms left, 250ms top;
+	position: absolute;
+	background: #ECC501;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 34px;
+	color: #FFF;
+	width:  85px;
+	height: 85px;
+	border-radius: 5px;
+}
+.block-2 {
+	background: #F0E4DC;
+	color: #786C63;
+	font-size: 40px;
+}
+.block-4 {
+	background: #ECE0C9;
+	color: #786C63;
+	font-size: 40px;
+}
+.block-8 {
+	background: #F2B079;
+	font-size: 40px;
+}
+.block-16 {
+	background: #EC8D54;
+	font-size: 40px;
+}
+.block-32 {
+	background: #F77B61;
+	font-size: 40px;
+}
+.block-64 {
+	background: #E95937;
+	font-size: 40px;
+}
+.block-128 {
+	background: #F4D86D;
+	font-size: 40px;
+}
+.block-256 {
+	background: #F1D04C;
+	font-size: 40px;
+}
+.block-512 {
+	background: #ECC75B;
+	font-size: 40px;
+}
+.block-1024 {
+	background: #E9C158;
+}
+.block-2048 {
+	background: #ECC501;
+}
+</style>
+<body st align = 'center'>
+
+    <!-- Окно игры -->
+    <div id = 'game'>
+
+        <!-- Надпись 2048 -->
+        <div id = 'title'><strong>2048</strong></div>
+
+        <!-- Лучший и текущий счёт -->
+        <div id = 'score' class = 'score-block'>Score<br><div id = 'score-output'>0</div></div>
+        <div id = 'best-score' class = 'score-block'>Best<br><div id = 'best-score-output'>0</div></div>
+
+        <!-- Кнопка смены темы -->
+        <button id = 'theme-change-button' class = 'button' onclick = 'changeTheme()'><strong><span id = 'selected-theme'>Light</span></strong></button>
+
+        <!-- Кнопка новой игры -->
+        <button id = 'new-game' class  = 'button' onclick = 'newGame()'><strong>New Game</strong></button>
+
+        <!-- Сетка игры -->
+        <table id = 'game-grid'>
+            <tr><td></td><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td><td></td></tr>
+        </table>
+
+    </div>
+
+</body>
+
+</html>

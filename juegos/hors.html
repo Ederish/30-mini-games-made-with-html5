@@ -1,0 +1,401 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+       <title>Horse Jumping</title>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
+        <script src="Horse Jumping.js"></script>
+        <link rel="stylesheet" href="Horse Jumping.css">
+  </head>
+  <audio style="display: none;" controls autoplay="true" loop="true" id="audio"><source src="zero.mp3" type="audio/mp3"></audio>
+  <script>// Created by lolo
+
+    var horseImg = 'https://www.animatedimages.org/data/media/217/animated-horse-image-0090.gif'
+    var obstacleSrc1 = 'https://image.flaticon.com/icons/svg/286/286130.svg';
+    var obstacleSrc2 = 'https://image.flaticon.com/icons/svg/882/882857.svg';
+    var obstacleSrc3 = 'https://image.flaticon.com/icons/svg/1670/1670077.svg';
+    var obstacleSrc4 = 'https://image.flaticon.com/icons/svg/588/588821.svg';
+    var obstacleSrc5 = 'https://image.flaticon.com/icons/svg/1497/1497594.svg';
+    var obstacleImg1;
+    var obstacleImg2;
+    var obstacleImg3;
+    var obstacleImg4;
+    var obstacleImg5;
+    var click = false;
+    var jumpState = true;
+    var obstacles = [];
+    var cpt = 0;
+    var life= 5;
+    var alife = true;
+    var end = false;
+    var startX = 0;
+    var startY = 0;
+    var W = 0;
+    var H = 0;
+    var bestScore = 0;
+    var down = true;
+    
+    function jumpbtn(){
+        if(down){
+            click=true;
+            jumpState=true;
+            down=false;
+        }
+    }
+    
+    window.onload = function(){
+         obstacleImg1 = new Image();
+            obstacleImg1.src = obstacleSrc1;
+         obstacleImg2 = new Image();
+            obstacleImg2.src = obstacleSrc2;
+         obstacleImg3 = new Image();
+            obstacleImg3.src = obstacleSrc3;
+         obstacleImg4 = new Image();
+            obstacleImg4.src = obstacleSrc4;
+         obstacleImg5 = new Image();
+            obstacleImg5.src = obstacleSrc5;
+         listObstacles=[obstacleImg1, obstacleImg2, obstacleImg3, obstacleImg4,obstacleImg5];
+    };
+    
+    function start(){
+        game.style.display="block";
+        infostart.style.display="none";
+        W = window.innerWidth;
+        H = window.innerHeight;
+        let canvas1 = document.getElementById("canvas1");
+            canvas1.width = W;
+            canvas1.height = H-100;
+        let canvas2 = document.getElementById("canvas2");
+            canvas2.width = W;
+            canvas2.height = 100;
+        let    ctx = canvas1.getContext("2d");
+        let    ctx2 = canvas2.getContext("2d");
+            ctx2.fillStyle = "#fff";
+            ctx2.font = 'bold 30px Courier';
+        var textString = "JUMP",
+            textWidth = ctx2.measureText(textString ).width;
+            ctx2.fillText(textString , (canvas2.width/2) - (textWidth / 2), 50);
+        var widthHorse = 100;
+        var heightHorse = 100;
+        startX = 40;
+        startY = H-200;    
+        var p = new createHorse(startX,startY,widthHorse,heightHorse,horseImg);
+        var img = document.getElementsByTagName('img')[0];
+        
+        function createHorse(x, y, width, height, imgHorse){
+            var img = document.createElement("img");
+                img.style.position = 'absolute';
+                img.style.top = y + "px";
+                img.style.left = x + "px";
+                img.style.width = width + "px";
+                img.style.height = height + "px";
+                img.src = imgHorse;
+           document.getElementsByTagName('body')[0].appendChild(img); 
+           
+           this.update=function(){
+               var speedY =this.jump();
+               startY+=speedY;
+               img.style.top = startY + "px";
+           };
+           
+           this.end=function(){
+               (startX<W+200)?startX+=3:0;
+               img.style.left = startX + "px";
+           };
+           
+           this.jump=function(){
+                    if(jumpState){
+                       img.style.transform="skewY(-30deg)";
+                       if(startY<H-310)jumpState=false;
+                       img.src=horseImg
+                       return -6;
+                 }
+                 else{
+                     img.style.transform="skewY(0deg)";
+                     if(startY>=H-200){
+                         click=false;
+                         jumpState=false;
+                         startY=H-200;
+                         down=true
+                     }
+                      return 6 ;
+                }
+            };
+            this.check=function(){
+                for(var i = obstacles.length - 1; i >= 0; i--){
+                    obstacles[i].update();
+                    if(obstacles[i].x<startX-100){
+                        if(obstacles[i].state===true)cpt++;
+                        obstacles.splice(i, 1);
+                        
+                    }
+                    else{
+                        
+                            if(obstacles[i].x<startX+95&&obstacles[i].x+40>startX&&obstacles[i].y<startY+70&&obstacles[i].state===true){
+                                (life>0)?life--:0;
+                                obstacles[i].state=false;
+                                signalDead();
+                            } 
+                    }
+                }
+            }
+        }
+        
+        function signalDead(){
+                info.style.backgroundColor="red";
+                setTimeout(function() { 
+                    info.style.backgroundColor="rgba(0, 0, 0, 0.7)";
+                }, 100);
+        }
+        
+        setInterval(function(){ 
+            var img = document.getElementsByTagName('img')[0];
+             img.src = horseImg;
+        }, 30000);
+        
+        function createObstales(x , y, obstacle){
+            this.x = x;
+            this.y = y;
+            this.state = true;
+            
+            this.draw = function(){
+                ctx.beginPath();
+                ctx.drawImage(obstacle, this.x, this.y, 40, 40);
+            };
+            
+            this.update = function(){
+                this.x -= 5;
+                this.draw();
+            };
+        }
+        
+        function drawObstales(){
+            var obstacle1 = Math.floor(Math.random() * listObstacles.length );
+            var obstacle2 = Math.floor(Math.random() * listObstacles.length );
+            var random =Math.random() * 1200+800
+    
+            setTimeout(function() { 
+                obstacles.push(new createObstales(W+80, H-135, listObstacles[obstacle2] ))
+            }, random);
+            
+            obstacles.push(new createObstales(W+80, H-135, listObstacles[obstacle1] ))
+        }window.setInterval(drawObstales,3000);
+        
+        function animate(){
+            requestAnimationFrame(animate); 
+            ctx.beginPath(); 
+            ctx.clearRect(0,0,innerWidth,innerHeight);
+            if(click)p.update();
+            if(alife)p.check();
+            cptbush.innerHTML = cpt;
+            cptlife.innerHTML = life;
+            if(life<=0){
+                alife=false;
+                p.end()
+                if(cpt>bestScore)bestScore=cpt;
+                infoend.style.display="block";
+                outbestscore.innerHTML = bestScore;
+                outnbrbushs.innerHTML = cpt;
+            }    
+        }
+        animate();
+    };    
+    
+    function restart(){
+        infoend.style.display = "none";
+        click=false    ;
+        jumpState =true;
+        obstacles =[]
+        cpt=0
+        life=5
+        alife =true;
+        end =false
+        startX =40;
+        startY = H-200;
+        down=true;
+        var img = document.getElementsByTagName('img')[0];
+            img.style.top = startY + "px";
+            img.style.left = startX + "px";
+    }</script>
+  <body>
+       <div id="game">
+            <canvas id="canvas1" ></canvas>
+            <canvas id="canvas2" onClick="jumpbtn()"></canvas>
+            <div id="info">
+                <div id ="imgcpt"></div>
+                <span id="cptbush"></span>
+                <span id="life">
+                    <span id="cptlife"></span>
+                    <i class="fas fa-heartbeat"></i>
+                </span>
+            </div>
+        </div>    
+    <div id="infostart">
+        <h1>Horse Jumping</h1>
+        <div id="imginfostart"></div>
+        <div id="play" onClick="start()">PLAY </div>
+    </div>
+    <div id="infoend">
+        <span style="font-size:1.5em">Game over</span><br><br>
+        Best score : <span id="outbestscore">22</span><br>
+        Your score : <span id="outnbrbushs">2</span><br><br>
+        <div id="playagain" onClick="restart()">PLAY AGAIN</div>
+    </div>
+    <style>/* Created by lolo */
+::-webkit-scrollbar{display: none;}
+        body {
+            padding:0;margin:0;
+            overflow:hidden;
+            font-family: 'Lato', sans-serif;
+            background-color:black;
+        }
+        
+        #game{
+            display:none;
+        }
+        
+        #infostart{
+            position:absolute;
+            margin:auto;
+            left:0;top:0;right:0;bottom:0;
+            width:350px;
+            height:350px;
+            color :white;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+        }
+        
+        h1{
+            letter-spacing:5px
+        }
+        
+        #imginfostart{
+            margin-top:50px;
+            height:150px;
+            width:50%;
+            background:url('https://www.stickpng.com/assets/images/587172f57b7f6103e35c6cc1.png') no-repeat;
+            background-size:100% auto ;
+        }
+        
+        #play{
+            cursor:pointer;
+            margin-top:10px;
+            padding:5px;
+             width:30%;
+             text-align:center;
+            border-radius:20px;
+            border:2px solid white;
+            animation: play 2s linear infinite;
+        }
+        
+        #horse{
+            width:200px;
+            z-index:3;
+        }
+        
+        @keyframes move{
+            50%{
+                background-color:red;
+            }
+        }
+        
+        #canvas1{
+            background:url('https://i.pinimg.com/564x/b1/43/6b/b1436b1fdfb3a40f056364d880934575.jpg') no-repeat;
+            background-size:cover;
+            z-index:1;
+        }
+        
+        #canvas2{
+            margin-top:-5px;
+            background:url('https://i.pinimg.com/564x/00/83/4d/00834d57d999433e79a96438aadee9fb.jpg') no-repeat;
+            background-size:cover;
+            box-shadow: 0 0 10px black;
+            z-index:2;
+        }
+        
+        #info{
+            position:absolute;
+            top:0;
+            width:100%;
+            height:50px;
+            background-color:rgba(0, 0, 0, 0.7);
+            color:white;
+            z-index:4;
+        }
+        
+        #imgcpt{
+            position:absolute;
+            top:10px;
+            left:10px;
+            width:25px;
+            height:25px;
+            background:url('https://image.flaticon.com/icons/svg/721/721323.svg');
+            background-size:cover;
+        }
+        
+        .fas{
+            color:red;
+            font-size:20px;
+            margin-left:5px;
+        }
+        
+        #cptbush{
+            position:absolute;
+            top:15px;
+            left:45px;
+            font-weight:800;
+        }
+        
+        #life{
+            position:absolute;
+            top:15px;
+            right:15px;
+            font-weight:800;
+        }
+        
+        #cptlife{
+            position:absolute;
+            top:0px;
+            right:35px;
+        }
+        #infoend{
+            color :white;
+            text-align:center;
+            display:none;
+            position:absolute;
+            margin:auto;
+            top:0;right:0;bottom:0;left:0;
+            width:300px;
+            height:100px;
+            border-radius:20px;
+            font-size:1em;
+            font-weight:800;
+             z-index:5;
+             animation: end 3s linear ;
+             
+        }
+        
+        @keyframes end{
+            0%{transform:translateX(-1000px);}
+            50%{transform:translateX(-1000px);}
+        }
+        
+        #playagain{
+            cursor:pointer;
+            padding:5px;
+            padding-left:15px;
+            padding-right:15px;
+            border-radius:20px;
+            border:2px solid white;
+            animation: play 2s linear infinite;
+        }
+        
+        @keyframes play{50%{opacity:0;}}
+        
+        #outbestscore, #outnbrbushs{
+            margin-left:15px;
+        }</style>
+  </body>
+</html>

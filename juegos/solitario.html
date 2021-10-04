@@ -1,0 +1,1946 @@
+<!DOCTYPE html>
+<html>
+	<audio style="display: none;" controls autoplay="true" loop="true" id="audio"><source src="menu.mp3" type="audio/mp3"></audio>
+	<head>
+		<title>Solitare</title>
+		<style>body {
+	padding: 0px;
+	margin: 0px;
+	text-align: center;
+  background-color: green;
+}
+::-webkit-scrollbar{display: none;}
+#playArea {
+	width: 95vw;
+	height: 100vh;
+	padding: 10px;
+	padding-top: 30px;
+	z-index: -1;
+}
+@media (max-width: 400px) {
+	#playArea {
+	width: 97vw;
+	height: 100vh;
+	padding: 7px;
+	padding-top: 30px;
+	z-index: -1;
+}
+}
+@media (min-width: 700px) {
+	#playArea {
+	width: 100vw;
+	height: 100vh;
+	padding: 7px;
+	padding-top: 30px;
+	z-index: -1;
+}
+}
+
+@media (max-width: 300px) {
+	#playArea {
+	width: 95vw;
+	height: 100vh;
+	padding: 7px;
+	padding-top: 30px;
+	z-index: -1;
+}
+}
+
+.cardArea {
+	width: 12vw;
+	height: 19.5vw;
+	background-color: #9a9a9a;
+	border-radius: 12.5px;
+	position: relative;
+	text-align: center;
+	border-style: solid;
+	border-color: black;
+	display: inline-block;
+	box-shadow: #aaaaaa 0.25em -0.25em 0 inset, #aaaaaa -0.25em -0.25em 0 inset, #aaaaaa -0.25em 0.25em 0 inset, #aaaaaa 0.25em 0.25em 0 inset;
+}
+
+
+#complete {
+	float: right;
+	position: relative;
+	display: inline-block;
+	justify-content: space-between;
+	margin: 10px;
+	right: 5%;
+}
+
+@media (max-width: 400px) {
+	#complete {
+	float: right;
+		margin-top: 10px;
+		margin-right: 0;
+		right: 3%;
+	}
+}
+
+@media (max-width: 300px) {
+	#complete {
+	float: right;
+		margin-top: 10px;
+		margin-right: 0;
+	}
+}
+
+
+
+
+#complete :last-child {
+	top: 0;
+}
+
+@media (max-width: 300px) {
+	#complete :last-child {
+		top: 5%;
+	}
+}
+
+#deckSlot {
+	top: .65em;
+	float: left;
+	background-color: black;
+	box-shadow: none;
+	position: relative;
+	display: flex;
+}
+
+
+
+.deck {
+	top: -0.2em;
+	left: 0em;
+	width: 12vw;
+	height: 19.5vw;
+	position: absolute;
+	background-image:url("https://4.bp.blogspot.com/-Vh-tfzAF5kk/WIoCZ14peTI/AAAAAAAAE6E/ts2QBYuObmwy3ylpSxKBAWEIZMNQp4_zgCLcB/s1600/playing-card-back.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: 120% 120%;
+  border-radius: 10px;
+	
+	border-style: solid;
+	border-width: thin;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19),rgba(0, 0, 200, 0.15) 0.5em -0.5em 0 inset, rgba(0, 0, 200, 0.15) -0.5em -0.5em 0 inset, rgba(0, 0, 200, 0.15) -0.5em 0.5em 0 inset, rgba(0, 0, 200, 0.15) 0.5em 0.5em 0 inset;
+}
+
+
+
+/* .down {
+	width: 12vw;
+	height: 19.5vw;
+	background-image:url("http://www.jimknapp.com/Cards/Non-Bicycle_files/image002.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: 150% 150%;
+  border-radius: 3px;
+  display: flex;
+	flex-direction: column;
+} */
+
+
+
+
+#hand {
+	width: 12.25vw;
+	top: .5em;
+	left: 2.5%;
+	background-color: blue;
+	border-radius: 10px;
+	position: relative;
+	margin: 0.15em;
+	float: left;
+	text-align: center;
+	border-style: solid;
+	border-color: black;
+	display: inline-block;
+	box-shadow: #0000bb 0.5em -0.5em 0 inset, #0000bb -0.5em -0.5em 0 inset, #0000bb -0.5em 0.5em 0 inset, #0000bb 0.5em 0.5em 0 inset;
+}
+
+
+
+
+#inPlay {
+	position: relative;
+	top: 0;
+	display: flex;
+	width: 99%;
+	justify-content: space-between;
+}
+
+/* @media (min-width: 690) {
+  #inPlay {
+	position: absolute;
+	top: 2.5%;
+
+	width: 666px;
+	justify-content: space-between;
+}
+} */
+
+
+.cardDown {
+	width: 12vw;
+	height: 19.5vw;
+	position: absolute;
+	background-image:url("https://4.bp.blogspot.com/-Vh-tfzAF5kk/WIoCZ14peTI/AAAAAAAAE6E/ts2QBYuObmwy3ylpSxKBAWEIZMNQp4_zgCLcB/s1600/playing-card-back.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: 120% 120%;
+  border-radius: 10px;
+  border-style: solid;
+  border-width: thin;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19),rgba(0, 0, 200, 0.15) 0.5em -0.5em 0 inset, rgba(0, 0, 200, 0.15) -0.5em -0.5em 0 inset, rgba(0, 0, 200, 0.15) -0.5em 0.5em 0 inset, rgba(0, 0, 200, 0.15) 0.5em 0.5em 0 inset;
+}
+
+.card {
+	unicode-bidi:bidi-override;
+	direction:rtl;
+	width: 12vw;
+	height: 19.5vw;
+	background-color: white;
+	border-radius: 10px;
+	position: relative;
+	border-style: solid;
+	border-width: thin; 
+	text-align: center;
+	display: inline-block;
+	z-index: 10;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19), #cccccc 0.25em -0.25em 0 inset, #cccccc -0.25em -0.25em 0 inset, #cccccc -0.25em 0.25em 0 inset, #cccccc 0.25em 0.25em 0 inset;
+}
+
+.red {
+	color: red;
+}
+
+#cbox {
+	display: flex;
+	float: right;
+	transform: translate(9%,0%);
+}
+
+#suitA, #suitB, #suitC, #suitD {
+	margin-right: 5px;
+	
+}
+
+@media (max-width: 540px) {
+	#suitA, #suitB, #suitC, #suitD {
+	margin-right: 2.5px;
+}
+}
+
+#suitA :last-child {
+	position: absolute;
+	
+}
+#suitB :last-child {
+	position: absolute;
+	
+}
+#suitC :last-child {
+	position: absolute;
+	
+}
+#suitD :last-child {
+	position: absolute;
+	
+}
+
+
+
+.play {
+	position: relative;
+	display: flex;
+}
+
+.play :nth-child(7) {
+	top: 1.5em;
+}
+
+.play :nth-child(6) {
+	top: 1.25em;
+}
+
+.play :nth-child(5) {
+	top: 1em;
+}
+
+.play :nth-child(4) {
+	top: .75em;
+}
+
+.play :nth-child(3) {
+	top: .5em;
+}
+
+.play :nth-child(2) {
+	top: .25em;
+}
+
+
+
+.first :first-child {
+	top: 0;
+}
+
+/* =====hand===== */
+
+#handpreview {
+	position: absolute;
+	z-index: 0;
+}
+
+#hand1 {
+	position: absolute;
+	top: 0.5em;
+	left: 2.8em;
+	z-index: 30;
+}
+
+#hand2 {
+	position: absolute;
+	top: 0.25em;
+	left: 1.4em;
+	z-index: 20;
+}
+
+#hand3 {
+	position: absolute;
+	z-index: 10;
+}
+
+@media (max-width: 400px) {
+	#hand1 {
+		position: absolute;
+		top: 0.25em;
+		left: 1.8em;
+		z-index: 30;
+	}
+	#hand2 {
+		position: absolute;
+		top: 0.125em;
+		left: 0.9em;
+		z-index: 20;
+	}
+	#hand3 {
+		position: absolute;
+		z-index: 1;
+		left: 10;
+	}
+}
+
+
+/* ======Card face======= */
+
+.toplft {
+	position: absolute;
+	text-align: left;
+	top: 3px;
+	left: 3px;
+	font-size: 1.25em;
+	font-weight: bold;
+}
+
+/*@media (min-width: 650px) {*/
+/*	.toplft {*/
+/*	position: absolute;*/
+/*	text-align: left;*/
+/*	top: 3px;*/
+/*	left: 3px;*/
+/*	font-size: 1.2em;*/
+/*}*/
+/*}*/
+
+/*.mid {*/
+/*	position: relative;*/
+/*	top: 27.5%;*/
+
+/*	font-size: 2em;*/
+/*	justify-content: space-around;*/
+/*}*/
+
+/*@media (max-width: 400px) {*/
+/*	.mid {*/
+/*		top: 27.5%;*/
+/*		font-size: 1.75em;*/
+/*	}*/
+/*}*/
+
+.midz {
+	font-size: 3em;
+	/*transform: translate(0%,50%);*/
+}
+
+/*@media (max-width: 400px) {*/
+/*	.midz {*/
+/*		font-size: 1.75em;*/
+/*		transform: translate(0%,55%);*/
+/*	}*/
+/*}*/
+
+/*@media (max-width: 350px) {*/
+/*	.midz {*/
+/*		font-size: 1.1em;*/
+/*		transform: translate(0%,90%);*/
+/*	}*/
+/*}*/
+
+
+.btmrt {
+	position: absolute;
+	transform: rotate(180deg);
+	right: 3px;
+	bottom: 3px;
+	font-size: 1.25em;
+	font-weight: bold;
+}
+
+/*@media (min-width: 650px) {*/
+/*	.btmrt {*/
+/*	position: absolute;*/
+/*	transform: rotate(180deg);*/
+/*	right: 3px;*/
+/*	bottom: 3px;*/
+/*	font-size: 1.2em;*/
+/*}*/
+/*}*/
+
+.red {
+	color: red;
+}
+
+.black {
+	color: black;
+}
+
+
+/* ===========Menu============== */
+
+#dots {
+	/*background-color: #201299;*/
+	/*color: white;*/
+
+	border-radius: 5px;
+	color: white;
+	padding: 1.5px;
+
+	position: fixed;
+	top: 0;
+	right: 1vw;
+	width: 90px;
+	height: 20px;
+	/*border-radius: 10px;*/
+	/*box-shadow: #2012ff 4px -4px 0 inset, #2012ff -4px -4px 0 inset, #2012ff -4px 4px 0 inset, #2012ff 4px 4px 0 inset;*/
+}
+
+@media (max-width: 300px) {
+	#dots {
+	background-color: #000099;
+	border-radius: 5px;
+	color: white;
+	padding: 3.5px;
+	box-shadow: 0 4px #999;
+	position: fixed;
+	top: 75vh;
+	right: 2.5vw;
+	width: 20px;
+	height: 20px;
+	border-radius: 10px;
+	}
+}
+
+#popSett {
+	background-color: white;
+	width: 0;
+	height: 0;
+	margin-top: 10vh;
+	position: fixed;
+	top: 0;
+	left: 15%;
+	border-style: solid;
+	border-color: black;
+	border-radius: 17px;
+	display: none;
+	z-index: 999;
+	box-shadow: #deadea 1.3em -1.3em 0 inset, #deadea -1.3em -1.3em 0 inset, #deadea -1.3em 1.3em 0 inset, #deadea 1.3em 1.3em 0 inset;
+}
+
+#winner {
+	background-image:url("http://dribbble.s3.amazonaws.com/users/41276/screenshots/332290/animated-rainbow.gif");
+	  background-repeat: no-repeat;
+	  background-position: center;
+	  -webkit-background-size: contain;
+	  -moz-background-size: contain;
+	  -o-background-size: contain;
+/* 	-webkit-transform: rotate(10deg);
+	-moz-transform: rotate(10deg);
+	-ms-transform: rotate(10deg);
+	-o-transform: rotate(10deg);
+	transform: rotate(10deg); */
+	background-size: 120%;
+	width: 60vw;
+	height: 50vw;
+	
+	margin-top: 10vh;
+	position: fixed;
+	top: 0;
+	left: 20%;
+	border-style: solid;
+	border-color: black;
+	border-width: thick;
+	border-radius: 350px;
+  display: none;
+	z-index: 998;
+}
+
+.wincount {
+  display: inline-block;
+  background-color: #000099;
+  color: white;
+  width: 7em;
+  height: 1.3em;
+  font-size: 1.5em;
+  border-style: solid;
+	border-color: black;
+  border-width: thin;
+  border-radius: 350px;
+  transform: translate(0,0);
+  left: 3.5em;
+}
+
+
+h2 {
+	transform: translate(20%,0%);
+	display: inline-block;
+	background-color: #000099;
+	border-radius: 5px;
+	color: white;
+	padding: 5px;
+}
+
+
+.butt {
+	display: inline-block;
+	background-color: #000099;
+	border-radius: 5px;
+	color: white;
+	padding: 3.5px;
+	box-shadow: 0 4px #999;
+}
+
+.new {
+  font-size: 1.1em;
+	margin: 1.5em;
+	padding: 10px;
+}
+
+.press {
+	transform: translateY(1px);
+	box-shadow: 0 1px #999;
+	background-color: #333333;
+}
+
+.setting {
+	margin-top: 6%;
+	font-size: 1.5em;
+	
+}
+
+.close {
+  background-color: #ae1423;
+  color: white;
+  font-weight: bold;
+	float: right;
+  position: relative;
+  border-radius: 20px;
+  height: 3em;
+  width: 3em;
+	top: 1em;
+	right: 1em;
+}
+
+.rainbow {
+	background-image:url("http://dribbble.s3.amazonaws.com/users/41276/screenshots/332290/animated-rainbow.gif");
+	  background-repeat: no-repeat;
+	  background-position: center;
+	  -webkit-background-size: contain;
+	  -moz-background-size: contain;
+	  -o-background-size: contain;
+	  background-size: 500%;
+}
+
+
+
+.redz {
+	background-color: red;
+	border-radius: 15px;
+}
+.blue {
+	background-color: blue;
+	border-radius: 15px;
+}
+.green {
+	background-color: green;
+	border-radius: 15px;
+}
+.yellow {
+	background-color: yellow;
+	border-radius: 15px;
+}
+.purple {
+	background-color: purple;
+	border-radius: 15px;
+}
+.orange {
+	background-color: orange;
+	border-radius: 15px;
+}
+.pink {
+	background-color: pink;
+	border-radius: 15px;
+}
+.goldenrod {
+	background-color: goldenrod;
+	border-radius: 15px;
+}
+.indigo {
+	background-color: indigo;
+	border-radius: 15px;
+}
+.darkgray {
+	background-color: darkgray;
+	border-radius: 15px;
+}
+
+.colourBox {
+	transform: translate(0%,0%);
+	display: flex;
+  background-color: #000099;
+  border-style: solid;
+	border-color: black;
+  border-width: thick;
+  border-radius: 60px;
+}
+.colour {
+	width: 14.28%;
+	height: 5vw;
+	margin: 3px;
+	
+}
+
+.card, #dots, #popSett {
+  -webkit-touch-callout: none; /* iOS Safari */
+	-webkit-user-select: none; /* Safari */
+	 -khtml-user-select: none; /* Konqueror HTML */
+	   -moz-user-select: none; /* Firefox */
+		-ms-user-select: none; /* Internet Explorer/Edge */
+			user-select: none; /* Non-prefixed version, currently
+								  supported by Chrome and Opera */
+}
+
+
+</style>
+		<script
+			  src="https://code.jquery.com/jquery-3.4.1.js"
+			  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+			  crossorigin="anonymous"></script>
+		  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/jquery-ui-touch-punch@0.2.3/jquery.ui.touch-punch.min.js"></script>
+	<script>
+
+$(document).ready(function() {
+
+
+  
+
+
+	newGame();
+	noHand();
+	
+
+
+	
+// alert("work in progress... :)\n\nMy First Project! =D\nUses a lot of jQuery, added touchpunch for mobile compatability. I've tested on a few devices but don't have a tablet to test on. let me know if everything is scaling well on your device.\n\n\nKnown glitches:\n\n	 Sometimes only the bottom right symbol on a card will seem draggable but it should go away, try just clicking higher on ther card? :/\n\n           If you're fast you can take a 2 off an ace and as its falling back on top of the ace, move that ace to another spot\n");
+
+
+$("#deckSlot").on("click", function (){
+
+  // 	$("#contdck").empty();
+
+	
+	if ($("#draw1").hasClass("press")) {
+		seeHand();
+		if(deck.length === 0) {
+			deck = deck.concat(hand);
+			hand = [];
+			deck.reverse();
+			oneDraw();
+//			fullDeck();
+
+
+			
+//			console.log(deck.length);
+		} else if(deck.length >= 1) {
+			oneDraw();
+		}
+		if (deck.length == 1) {
+//			noDeck();
+			
+		}
+	}else
+	if ($("#draw3").hasClass("press")) {
+		seeHand();
+	if(deck.length === 0) {
+		deck = deck.concat(hand);
+		hand = [];
+		deck.reverse();
+		threeDraw();
+//		fullDeck();
+
+
+		
+//		console.log(deck.length);
+	} else if(deck.length < 3) {
+//		noDeck();
+		threeDraw();
+	} 
+	else if(deck.length > 3) {
+		threeDraw();
+//		fullDeck();
+	}else {
+//		noDeck();
+		threeDraw();
+	}
+	}
+	
+	$(this).addClass("press");
+  setTimeout(function() {
+	$("#deckSlot").removeClass("press");
+  }, 50);
+
+	click();
+//  shik();
+  
+//	seeDeck();
+});
+
+
+
+
+//
+//
+//menu box
+//
+$("#dots").on("click", function(){
+    click();
+    
+		$(this).addClass("press");
+		setTimeout(function() {
+			$("#dots").removeClass("press");
+
+		}, 500);
+		
+	if ($("#popSett").css("display") === "none") {
+		$("#popSett").show();
+		$("#popSett").animate({"width": "70vw", "height": "80vh"}, 500);}else
+	if ($("#popSett").css("display") != "none") {
+		$("#popSett").animate({"width": "0vw", "height": "0vh"}, 500);
+			setTimeout(function() {
+	$("#popSett").hide();
+}, 499);
+		
+	}
+
+	
+});
+
+$("#close").on("click", function(){
+    click();
+	$("#popSett").animate({"width": "0vw", "height": "0vh"}, 500);
+
+	setTimeout(function() {
+	$("#popSett").hide();
+}, 499);
+});
+
+$(".new").on("click", function(){
+    $("#winner").hide();
+    click();
+	$(this).addClass("press");
+setTimeout(function() {
+	$(".new").removeClass("press");
+
+		setTimeout(function() {
+		$("#popSett").hide();
+	}, 250);
+	$(".hand").empty();
+	$("#popSett").animate({"width": "0vw", "height": "0vh"}, 500);
+	newGame();
+}, 150);
+		
+		
+		
+	});
+  
+$(".colourBox").children().on("click", function () {
+    click();
+        let theColor = $(this).css("background-color");
+        	$("#playArea").css("background-color", theColor);
+    });
+
+//shortened above	
+// $(".redz").on("click", function () {
+// 	$("#playArea").css("background-color", "red");
+// });
+// $(".blue").on("click", function () {
+// 	$("#playArea").css("background-color", "blue");
+// });
+// $(".green").on("click", function () {
+// 	$("#playArea").css("background-color", "green");
+// });
+// $(".yellow").on("click", function () {
+// 	$("#playArea").css("background-color", "yellow");
+// });
+// $(".purple").on("click", function () {
+// 	$("#playArea").css("background-color", "purple");
+// });
+// $(".orange").on("click", function () {
+// 	$("#playArea").css("background-color", "orange");
+// });
+// $(".pink").on("click", function () {
+// 	$("#playArea").css("background-color", "pink");
+// });
+// $(".goldenrod").on("click", function () {
+// 	$("#playArea").css("background-color", "goldenrod");
+// });
+// $(".indigo").on("click", function () {
+// 	$("#playArea").css("background-color", "indigo");
+// });
+// $(".darkgray").on("click", function () {
+
+// 	$("#playArea").css("background-color", "darkgray");
+// });
+
+$("#draw1").on("click", function(){
+    click();
+	if ($(this).hasClass("press") !== true) {
+
+  }
+	$(this).addClass("press");
+
+	$("#draw3").removeClass("press");
+});
+
+$("#draw3").on("click", function(){
+    click();
+	if ($(this).hasClass("press") !== true) {
+
+  }
+	$(this).addClass("press");
+	$("#draw1").removeClass("press");
+});
+
+
+});
+
+
+
+
+
+
+
+var card = {};
+let value = "";
+let suit = "";
+
+var winz = 0;
+
+var values = ["A",2,3,4,5,6,7,8,9,10,"J","Q","K"];
+var bsuits = ["♠", "♣"];
+var rsuits = ["♥", "♦"];
+var allsuits = ["♠", "♣", "♥", "♦"];
+var colors = ["black", "red" , "black"];
+
+var deck = [];
+var hand = [];
+var hand1 = hand[0];
+var hand2 = hand[1];
+var hand3 = hand[2];
+
+var suitD = [];
+var suitC = [];
+var suitB = [];
+var suitA = [];
+
+var donez = ["suitA","suitB","suitC","suitD"];
+
+var playCols = [[],[],[],[],[],[],[]];
+
+var first = playCols[0];
+var firstu = [];
+var second = playCols[1];
+var secondu = [];
+var third = playCols[2];
+var thirdu = [];
+var fourth = playCols[3];
+var fourthu = [];
+var fifth = playCols[4];
+var fifthu = [];
+var sixth = playCols[5];
+var sixthu = [];
+var seventh = playCols[6];
+var seventhu = [];
+
+var inPlay = ["first","second","third","fourth","fifth","sixth","seventh"];
+var inPlayU = ["firstu","secondu","thirdu","fourthu","fifthu","sixthu","seventhu"];
+
+var spareIndex = [];
+
+var p = 0;
+
+
+
+function newGame() {
+  
+	deck = [];
+	suitD = [];
+	suitC = [];
+	suitB = [];
+	suitA = [];
+	first = [];
+	second = [];
+	third = [];
+	fourth = [];
+	fifth = [];
+	sixth = [];
+	seventh = [];
+	hand = [];
+	$(".play").empty();
+	
+  for( let i = 0; i < bsuits.length; i++ ) {
+	for( let j = 0; j < values.length; j++ ) {
+	  
+	  var card ={};
+	  card.suit = bsuits[i];
+	  card.value = values[j];
+	  card.claz = `card , hand1 , ui-widget-content , black , ${values[j]}`;
+	  card.color = "black";
+	  card.face = false;
+	  card.down = `<div class="cardDown"></div>`;
+	  card.up = `<div class="card , up , ${bsuits[i]} , ${values[j]} , drag , black , ui-widget-content">
+					<div class="toplft">${bsuits[i] + values[j]}</div>
+					<div class="midz">${bsuits[i] + values[j]}</div>
+					<div class="btmrt">${bsuits[i] + values[j]}</div>
+				</div>`;
+	  
+	  deck.push(card);
+	}	
+  }
+  for( let k = 0; k < rsuits.length; k++ ) {
+	for( let l = 0; l < values.length; l++ ) {
+	  
+	  var card = [];
+	  card.suit = rsuits[k];
+	  card.value = values[l];
+	  card.claz = `card , hand1 , ui-widget-content , red , ${values[l]}`;
+	  card.color = "red";
+	  card.face = false;
+	  card.down = `<div class="cardDown"></div>`;
+	  card.up = `<div class="card , up , ${rsuits[k]} , ${values[l]} , drag , red">
+					<div class="toplft">${rsuits[k] + values[l]}</div>
+					<div class="midz">${rsuits[k] + values[l]}</div>
+					<div class="btmrt">${rsuits[k] + values[l]}</div>
+				</div>`;
+	  
+	  deck.push(card);
+	}	
+  }
+  
+  
+  
+  noHand();
+  clearComplete();
+//   fullDeck();
+  shuffle(deck);
+  deal();
+  rules();
+  downFlip();
+  seeDeck();
+  for (let x = 1; x < 99; x++) {
+	let y = x * -0.05;
+	$(`#contdck :nth-child(${x})`).css("top", `${y}em`);
+}
+  
+    $(".wincount").empty();
+    $(".wincount").append("Games won:   " + winz);	
+//  console.log( "Created new deck of ", deck.length, " cards." );
+//  console.log(deck[0].value + " of " + deck[0].suit);
+//  console.log( "Hand of ", hand.length, " cards." );
+  //console.log(seventh.value.length);
+  
+}
+//
+//shuffle function copied from ..i forgot 
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+	// Pick a remaining element...
+	randomIndex = Math.floor(Math.random() * currentIndex);
+	currentIndex -= 1;
+
+	// And swap it with the current element.
+	temporaryValue = array[currentIndex];
+	array[currentIndex] = array[randomIndex];
+	array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
+function deal() {
+
+//$("#suitA").append(deck[0].up);
+	
+	
+//	
+	//1
+		firstu.unshift(deck.shift());
+		$("#first").append(firstu[0].up);
+		second.unshift(deck.shift());
+		$("#second").append(second[0].down);
+		$("#second:last-child").addClass("second");
+		third.unshift(deck.shift());
+		$("#third").append(third[0].down);
+		$("#third:last-child").addClass("third");
+		fourth.unshift(deck.shift());
+		$("#fourth").append(fourth[0].down);
+		$("#fourth:last-child").addClass("fourth");
+		fifth.unshift(deck.shift());
+		$("#fifth").append(fifth[0].down);
+		$("#fifth:last-child").addClass("fifth");
+		sixth.unshift(deck.shift());
+		$("#sixth").append(sixth[0].down);
+		$("#sixth:last-child").addClass("sixth");
+		seventh.unshift(deck.shift());
+		$("#seventh").append(seventh[0].down)
+		$("#seventh:last-child").addClass("seventh");
+		
+		//2
+		secondu.unshift(deck.shift());
+		$("#second").append(secondu[0].up);
+		third.unshift(deck.shift());
+		$("#third").append(third[0].down);
+		$("#third:last-child").addClass("third");
+		fourth.unshift(deck.shift());
+		$("#fourth").append(fourth[0].down);
+		$("#fourth:last-child").addClass("fourth");
+		fifth.unshift(deck.shift());
+		$("#fifth").append(fifth[0].down);
+		$("#fifth:last-child").addClass("fifth");
+		sixth.unshift(deck.shift());
+		$("#sixth").append(sixth[0].down);
+		$("#sixth:last-child").addClass("sixth");
+		seventh.unshift(deck.shift());
+		$("#seventh").append(seventh[0].down)
+		$("#seventh:last-child").addClass("seventh");
+		//3
+		thirdu.unshift(deck.shift());
+		$("#third").append(thirdu[0].up);
+		fourth.unshift(deck.shift());
+		$("#fourth").append(fourth[0].down);
+		$("#fourth:last-child").addClass("fourth");
+		fifth.unshift(deck.shift());
+		$("#fifth").append(fifth[0].down);
+		$("#fifth:last-child").addClass("fifth");
+		sixth.unshift(deck.shift());
+		$("#sixth").append(sixth[0].down);
+		$("#sixth:last-child").addClass("sixth");
+		seventh.unshift(deck.shift());
+		$("#seventh").append(seventh[0].down)
+		$("#seventh:last-child").addClass("seventh");
+		//4
+		fourthu.unshift(deck.shift());
+		$("#fourth").append(fourthu[0].up);
+		fifth.unshift(deck.shift());
+		$("#fifth").append(fifth[0].down);
+		$("#fifth:last-child").addClass("fifth");
+		sixth.unshift(deck.shift());
+		$("#sixth").append(sixth[0].down);
+		$("#sixth:last-child").addClass("sixth");
+		seventh.unshift(deck.shift());
+		$("#seventh").append(seventh[0].down)
+		$("#seventh:last-child").addClass("seventh");
+		//5
+		fifthu.unshift(deck.shift());
+		$("#fifth").append(fifthu[0].up);
+		$("#fifth:last-child").addClass("fifth");
+		sixth.unshift(deck.shift());
+		$("#sixth").append(sixth[0].down);
+		$("#sixth:last-child").addClass("sixth");
+		seventh.unshift(deck.shift());
+		$("#seventh").append(seventh[0].down)
+		$("#seventh:last-child").addClass("seventh");
+		//6
+		sixthu.unshift(deck.shift());
+		$("#sixth").append(sixthu[0].up);
+		seventh.unshift(deck.shift());
+		$("#seventh").append(seventh[0].down)
+		//7
+		seventhu.unshift(deck.shift());
+		$("#seventh").append(seventhu[0].up)
+}
+
+
+
+function downFlip() {
+	//Make facedown cards flip
+$(".cardDown").on("click", function() {
+//	if ($(this).is("#first div:last-child")) {
+//		firstu.unshift(first.shift());
+//		$(this).replaceWith(firstu[0].up);}else
+	if ($(this).is("#second div:last-child")) {
+		secondu.unshift(second.shift());
+		$(this).replaceWith(secondu[0].up);}else
+	if ($(this).is("#third div:last-child")) {
+		thirdu.unshift(third.shift());
+		$(this).replaceWith(thirdu[0].up);}else
+	if ($(this).is("#fourth div:last-child")) {
+		fourthu.unshift(fourth.shift());
+		$(this).replaceWith(fourthu[0].up);}else
+	if ($(this).is("#fifth div:last-child")) {
+		fifthu.unshift(fifth.shift());
+		$(this).replaceWith(fifthu[0].up);}else
+	if ($(this).is("#sixth div:last-child")) {
+		sixthu.unshift(sixth.shift());
+		$(this).replaceWith(sixthu[0].up);}else
+	if ($(this).is("#seventh div:last-child")) {
+		seventhu.unshift(seventh.shift());
+		$(this).replaceWith(seventhu[0].up);}
+		
+	rules();
+click();
+  
+});
+};
+
+////////////Audio
+//
+//
+
+function shik(url){
+  var audio = document.createElement('audio');
+  audio.style.display = "none";
+  audio.src = "http://www.soundjay.com/button/sounds/button-16.mp3";
+  audio.autoplay = true;
+  audio.onended = function(){
+	audio.remove(); //Remove when played.
+  };
+  document.body.appendChild(audio);
+}
+
+function click(url){
+  var audio = document.createElement('audio');
+  audio.style.display = "none";
+  audio.src = 'http://soundbible.com/grab.php?id=772&type=wav';
+  audio.autoplay = true;
+  audio.onended = function(){
+	audio.remove(); //Remove when played.
+  };
+  document.body.appendChild(audio);
+}
+
+//
+//
+  //
+  //RULES
+  //
+  
+
+
+function rules() {
+	
+	// 	$("#contdck").empty();
+
+
+	
+	var vwid = $(document).width() ;
+ 
+  var jmod = vwid / 1;
+	
+	var vmod = vwid / jmod ;
+  var fmod = vwid / 17;
+  var sfmod = fmod / 2.5;
+	
+	
+	
+	// console.log(vwid);
+	// console.log(vmod);
+	// console.log(fmod);
+
+  // if ($(innerWidth) > 690) {
+  //   $("#inPlay").css("width", "666px");
+  // }
+
+  
+	$(".midz ").css("transform", `translateY(1em)`);
+	$(".midz ").css("font-size", fmod);
+	$(".toplft ").css("font-size", sfmod);
+	$(".btmrt ").css("font-size", sfmod);
+
+//Make cards draggable
+$( function() {
+
+	$( `.drag`).draggable( {
+		containment: '#playarea',
+		cursor: 'move',
+//		snap: '#suitA , #suitB , #suitC , #suitD , .card , .cardArea',
+		revert: "invalid",
+		stack: ".card",
+		start: function() {
+shik();
+			if ($(this).parents().hasClass("inPlay") || $(this).parents().hasClass("complete")) {
+			$(this).parent().droppable("enable");}
+
+			if ($(this).parent().hasClass("hand3") && hand.length > 1) {
+
+				$("#handpreview").append(hand[1].up);
+			}
+			rules();
+	  
+	  
+
+
+// 			$(this).css("z-index", 50);
+// 			for (let x = 0; x < inPlay.length; x++) {
+// 				if ($(this).parents().hasClass(inPlay[x])) {console.log("Dragging from column " + inPlay[x] + " !");}
+// 			}
+		},
+		stop: function() {
+		shik();
+
+			if (hand.length > 0) {
+		$("#handpreview").empty();
+		rules();
+		   
+	  }
+	  
+
+		}
+	});
+	
+});
+//Slots accept kings
+$("#first , #second , #third , #fourth , #fifth , #sixth , #seventh").droppable({
+	accept: function(w) {
+		if(w.hasClass("K") && $(this).children().length == 0) {
+			return true;
+		}
+	},
+	drop: function(e, ui) {
+		
+		if (ui.draggable.parents().hasClass("hand1")) {
+					$("#hand2 :last-child").addClass("drag");
+//					rules();
+					hand.shift();
+//					console.log("Dragged from hand1!");
+				}
+		if (ui.draggable.parents().hasClass("hand2")) {
+					$("#hand3 :last-child").addClass("drag");
+//					rules();
+					hand.shift();
+//					console.log("Dragged from hand2!");
+				}
+		if (ui.draggable.parents().hasClass("hand3")) {
+			
+		if ($("#draw1").hasClass("press")) {
+			if (ui.draggable.parents().hasClass("hand3")) {
+					hand.shift();
+						if (hand.length > 0) {
+							$("#hand3").empty();
+							$("#hand3").append(hand[0].up);rules();}
+					
+					
+
+	
+				}
+		}else
+		if ($("#draw3").hasClass("press")) {
+			if (ui.draggable.parents().hasClass("hand3")) {
+					hand.shift();
+//					console.log("Dragged from hand3!");
+						if (hand.length > 0) {
+							$("#hand1").empty();
+							$("#hand1").append(hand[0].up);}else
+						if (hand.length > 1) {
+							$(".hand2").empty();
+							$(".hand2").append(hand[1].up);
+							$(".hand2 :last-child").removeClass("drag");}else
+						if (hand.length > 2) {
+							$(".hand3").empty();
+							$(".hand3").append(hand[2].up);
+							$(".hand3 :last-child").removeClass("drag");}
+					
+					
+					
+	
+				}
+		}
+						
+					
+	
+				}
+		ui.draggable.detach().css({top: 0,left: 0}).appendTo($(this));
+//		$(e.target).droppable("disable");
+rules();
+	}
+});
+
+//Make cards accept cards of lower value
+
+$(".play :last-child").droppable({
+	accept: function(w) {
+	
+	if ($("#inPlay").has(this)) {	
+		for (let x = 0; x <= 1; x++) {
+			for (let y = 0; y < values.length; y++) {
+				
+					if($(this).children().length == 3 && w.hasClass(values[y]) && w.hasClass(colors[x]) && $(this).hasClass(values[y+1]) && $(this).hasClass(colors[x+1])) {
+						return true;
+					}
+			}
+		}
+	}
+	
+	//
+	//Shortened above
+	//
+	//
+// 		if ($("#inPlay").has(this)) {
+// 			if(w.hasClass("A") && w.hasClass("red") && $(this).hasClass("2") && $(this).hasClass("black")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("A") && w.hasClass("black") && $(this).hasClass("2") && $(this).hasClass("red")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("2") && w.hasClass("red") && $(this).hasClass("3") && $(this).hasClass("black")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("2") && w.hasClass("black") && $(this).hasClass("3") && $(this).hasClass("red")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("3") && w.hasClass("red") && $(this).hasClass("4") && $(this).hasClass("black")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("3") && w.hasClass("black") && $(this).hasClass("4") && $(this).hasClass("red")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("4") && w.hasClass("red") && $(this).hasClass("5") && $(this).hasClass("black")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("4") && w.hasClass("black") && $(this).hasClass("5") && $(this).hasClass("red")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("5") && w.hasClass("red") && $(this).hasClass("6") && $(this).hasClass("black")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("5") && w.hasClass("black") && $(this).hasClass("6") && $(this).hasClass("red")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("6") && w.hasClass("red") && $(this).hasClass("7") && $(this).hasClass("black")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("6") && w.hasClass("black") && $(this).hasClass("7") && $(this).hasClass("red")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("7") && w.hasClass("red") && $(this).hasClass("8") && $(this).hasClass("black")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("7") && w.hasClass("black") && $(this).hasClass("8") && $(this).hasClass("red")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("8") && w.hasClass("red") && $(this).hasClass("9") && $(this).hasClass("black")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("8") && w.hasClass("black") && $(this).hasClass("9") && $(this).hasClass("red")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("9") && w.hasClass("red") && $(this).hasClass("10") && $(this).hasClass("black")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("9") && w.hasClass("black") && $(this).hasClass("10") && $(this).hasClass("red")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("10") && w.hasClass("red") && $(this).hasClass("J") && $(this).hasClass("black")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("10") && w.hasClass("black") && $(this).hasClass("J") && $(this).hasClass("red")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("J") && w.hasClass("red") && $(this).hasClass("Q") && $(this).hasClass("black")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("J") && w.hasClass("black") && $(this).hasClass("Q") && $(this).hasClass("red")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("Q") && w.hasClass("red") && $(this).hasClass("K") && $(this).hasClass("black")) {
+// 				return true;
+// 			}else
+// 			if(w.hasClass("Q") && w.hasClass("black") && $(this).hasClass("K") && $(this).hasClass("red")) {
+// 				return true;
+// 			}
+// 		}
+	},
+	drop: function(e, ui) {
+		
+//		$(ui.draggable).hasClass("hand1") varg = 20;
+//		$(ui.draggable).hasClass("drag") varg = -20;
+
+
+
+		for (let x = 0; x < inPlay.length; x++) {
+				if (ui.draggable.parents().hasClass(inPlay[x])) {
+					
+//					console.log("Dropped from column " + inPlay[x] + " !");}
+				}
+			}
+		if (ui.draggable.parents().hasClass("hand1")) {
+					$("#hand2 :last-child").addClass("drag");
+//					rules();
+					hand.shift();
+//					console.log("Dragged from hand1!");
+				}
+		if (ui.draggable.parents().hasClass("hand2")) {
+					$("#hand3 :last-child").addClass("drag");
+//					rules();
+					hand.shift();
+//					console.log("Dragged from hand2!");
+				}
+// 	if ($("#draw3").hasClass("press")) {	
+// 		if (ui.draggable.parents().hasClass("hand3")) {
+
+// //					hand.shift();
+// //					console.log("Dragged from hand3!");
+//						 if (hand.length > 2) {
+// 							$(".hand1").empty();
+// 							$(".hand1").append(hand[0].up);
+// 							$(".hand1 :last-child").removeClass("drag");rules();}else
+// 						if (hand.length > 1) {
+// 							$(".hand2").empty();
+// 							$(".hand2").append(hand[1].up);
+// 							$(".hand2 :last-child").removeClass("drag");rules();}else
+// 						if (hand.length > 0) {
+// 							$("#hand3").empty();
+// 							$("#hand3").append(hand[2].up);rules();}
+						
+						
+					
+					
+// //						rules();
+	
+// 		}
+// 	}
+	else
+
+	
+			if ($("#draw1").hasClass("press")) {
+			if (ui.draggable.parents().hasClass("hand3")) {
+					hand.shift();
+						if (hand.length > 0) {
+							$("#hand3").empty();
+							$("#hand3").append(hand[0].up);rules();}
+					
+					
+//						rules();
+	
+				}
+		}else
+		if ($("#draw3").hasClass("press")) {
+			if (ui.draggable.parents().hasClass("hand3")) {
+					hand.shift();
+//					console.log("Dragged from hand3!");
+						if (hand.length > 2) {
+							$(".hand1").empty();
+							$(".hand1").append(hand[0].up);
+//						    $(".hand2").empty();
+							$(".hand2").append(hand[1].up);
+							$(".hand2 :last-child").removeClass("drag");
+//							$("#hand3").empty();
+							$("#hand3").append(hand[2].up);
+							$(".hand3 :last-child").removeClass("drag");
+
+						}else
+						if (hand.length > 1) {
+							$(".hand2").empty();
+							$(".hand2").append(hand[0].up);
+						    $("#hand3").empty();
+							$("#hand3").append(hand[1].up);
+							$(".hand3 :last-child").removeClass("drag");
+
+						}else
+						if (hand.length > 0) {
+							$("#hand3").empty();
+							$("#hand3").append(hand[0].up);}
+					
+					
+						rules();
+	
+	  }
+		}
+		
+
+		
+
+//ui.draggable.detach().css({top: "-.9em" ,left: 0}).appendTo($(this));
+		
+		
+	if ($(window).width() >= 400) {
+	    				if ($(ui.draggable).parents().hasClass("complete")) {
+				    ui.draggable.detach().css({top: "1.25em" ,left: 0}).appendTo($(this));
+				}else
+
+			ui.draggable.detach().css({top: "-1.5em" ,left: 0}).appendTo($(this));
+		}else
+
+		if ($(window).width() < 400)	{
+		        if ($(ui.draggable).parents().hasClass("complete")) {
+				    ui.draggable.detach().css({top: "1em" ,left: 0}).appendTo($(this));
+				}else
+			ui.draggable.detach().css({top: "-.63em" ,left: 0}).appendTo($(this));
+			
+		}else
+	if ($(window).width() >= 500) {
+	    		if ($(ui.draggable).parents().hasClass("complete")) {
+				    ui.draggable.detach().css({top: "1.25em" ,left: 0}).appendTo($(this));
+				}else
+			ui.draggable.detach().css({top: "-2em" ,left: 0}).appendTo($(this));
+		}
+		
+		
+//		$(e.target).css("position:", "relative");
+//		$(e.target).droppable("disable");
+	
+	rules();
+		
+	}
+});
+
+
+
+
+
+
+
+//Final suit collection
+$("#suitA , #suitB , #suitC , #suitD").droppable({
+
+	accept: function(q) {
+		
+		if(q.hasClass("A") && $(this).children().length == 0) {
+//			console.log(q.has().children().length);
+			return true;
+		}else 
+		
+		//
+		//cycle through array of suits and values to accept the next value higher of same suit
+		//
+		if (q.children().length == 3) {
+		for (let x = 0; x < allsuits.length; x++) {
+			for (let y = 1; y < values.length; y++) {
+				if(q.hasClass(values[y]) && q.hasClass(allsuits[x]) && $(this).children([0]).hasClass(values[y - 1]) && $(this).children([0]).hasClass(allsuits[x])) {
+					
+			return true;
+		}
+			}
+		}
+		}
+//		console.log(q.children().length);
+		
+		
+	},
+	drop: function(e, ui) {
+		
+		if (ui.draggable.parents().hasClass("hand1")) {
+					$("#hand2 :last-child").addClass("drag");
+//					rules();
+					hand.shift();
+//					console.log("Dragged from hand1!");
+				}
+		if (ui.draggable.parents().hasClass("hand2")) {
+					$("#hand3 :last-child").addClass("drag");
+//					rules();
+					hand.shift();
+//					console.log("Dragged from hand2!");
+				}
+			if ($("#draw1").hasClass("press")) {
+			if (ui.draggable.parents().hasClass("hand3")) {
+					hand.shift();
+						if (hand.length > 0) {
+							$("#hand3").empty();
+							$("#hand3").append(hand[0].up);}
+					
+					
+//						rules();
+	
+				}
+		}else
+				if ($("#draw3").hasClass("press")) {
+			if (ui.draggable.parents().hasClass("hand3")) {
+					hand.shift();
+//					console.log("Dragged from hand3!");
+						if (hand.length > 2) {
+							$(".hand1").empty();
+							$(".hand1").append(hand[0].up);
+//						    $(".hand2").empty();
+							$(".hand2").append(hand[1].up);
+							$(".hand2 :last-child").removeClass("drag");
+//							$("#hand3").empty();
+							$("#hand3").append(hand[2].up);
+							$(".hand3 :last-child").removeClass("drag");
+
+						}else
+						if (hand.length > 1) {
+							$(".hand2").empty();
+							$(".hand2").append(hand[0].up);
+						    $("#hand3").empty();
+							$("#hand3").append(hand[1].up);
+							$(".hand3 :last-child").removeClass("drag");
+
+						}else
+						if (hand.length > 0) {
+							$("#hand3").empty();
+							$("#hand3").append(hand[0].up);}
+					
+					
+						rules();
+	
+	  }
+		}
+		
+		
+		
+		if ($(ui.draggable).hasClass("drag")) {
+			if ($(this) === $("#suitA")) {
+				for (let y = 0; y < inPlay.length; y++) {
+//					if (ui.draggable.parents().hasClass(inPlay[y])) {
+//					var tempd = inPlay[y];
+//					console.log(inPlay[0]);
+//					}
+			   
+//				inPlay[y].unshift(denz[0].shift());
+				}
+				
+			}else
+			if ($(this) === $("#suitB")) {
+				suitB.shift(hand[0].shift());
+			}else
+			if ($(this) === $("#suitC")) {
+				suitC.shift(hand[0].shift());
+			}
+			if ($(this) === $("#suitD")) {
+				suitD.shift(hand[0].shift());
+			}
+		}else
+		if ($(ui.draggable).hasClass("hand1")) {
+			if ($(this) === $("#suitA")) {
+				suitA.shift(hand[0].shift());
+			}else
+			if ($(this) === $("#suitB")) {
+				suitB.shift(hand[0].shift());
+			}else
+			if ($(this) === $("#suitC")) {
+				suitC.shift(hand[0].shift());
+			}
+			if ($(this) === $("#suitD")) {
+				suitD.shift(hand[0].shift());
+			}
+		}
+		
+		
+		ui.draggable.detach().css({position: "absolute",top: 0,left: 0}).appendTo($(this));
+		
+			//$(e.target).droppable("disable");
+	
+	rules();	
+		
+	}
+	
+	
+
+});
+
+if ($("#suitA").children().length == 13 & $("#suitB").children().length == 13 & $("#suitC").children().length == 13 & $("#suitD").children().length == 13) {
+    winz++;
+    	
+	winner();
+// 	$(".new").on("click", function(){
+// 	$("#winner").hide();
+// 	$(".hand").empty();
+// 	newGame();
+
+		
+		
+// 	});
+}
+
+//seeDeck();
+for (let x = 1; x < 99; x++) {
+	let y = x * -0.05;
+	$(`#contdck :nth-child(${x})`).css("top", `${y}em`);
+}
+
+// #contdck :last-child {
+// 	top: -0.35em;
+// }
+
+}
+
+
+/////////////////////////////////
+
+
+
+
+
+
+function moveMenu() {
+	if ($("#popSett").css("display") === "none") {
+		$("#popSett").show();
+		$("#popSett").animate({"width": "70vw", "height": "80vh"}, 500);}else
+	if ($("#popSett").css("display") != "none") {
+		$("#popSett").animate({"width": "0vw", "height": "0vh"}, 500);
+		$("#popSett").hide();
+		
+	}
+}
+
+function winner() {
+	$("#winner").show();
+	$(".wincount").empty();
+    $(".wincount").append("Games won:   " + winz);
+}
+
+function winHide() {
+	$("#winner").hide();
+}
+
+function noDeck() {
+	$("#contdck").empty();
+}
+function curDeck() {
+	if (deck.length > 1) {
+   
+	}
+}
+function seeDeck() {
+//	$(".deck").show();
+	
+		$("#contdck").empty();
+		 	for (let x = 0; x < deck.length; x++) {
+				$("#contdck").append(`<div class="deck" ></div>`);
+		}
+
+//console.log(deck.length);
+}
+function seeHand() {
+	$("#handbox").show();
+}
+function noHand() {
+	$("#handbox").hide();
+}
+function clearComplete() {
+	$("#suitA , #suitB , #suitC , #suitD").empty();
+}
+
+function threeDraw() {
+    
+
+		if(deck.length >= 4) {
+//		fullDeck();
+		hand.unshift(deck.shift());
+		hand.unshift(deck.shift());
+		hand.unshift(deck.shift());seeDeck();
+    	} else if(deck.length === 3) {
+    		hand.unshift(deck.shift());
+    		hand.unshift(deck.shift());
+    		hand.unshift(deck.shift());seeDeck();
+    //		noDeck();
+    	} else if(deck.length === 2) {
+    		hand.unshift(deck.shift());
+    		hand.unshift(deck.shift());seeDeck();
+    //		noDeck();
+    	} else if(deck.length === 1) {
+    		hand.unshift(deck.shift());seeDeck();
+    //		noDeck();
+    	} else if(deck.length === 0) {
+    //		noDeck();
+    	}
+	
+	    if (deck.length + hand.length > 2) {
+	        $("#hand1").empty();
+        	$("#hand1").append(hand[0].up);
+        	$(".hand2").empty();
+        	$(".hand2").append(hand[1].up);
+        	$(".hand2 :last-child").removeClass("drag");
+        	$(".hand3").empty();
+        	$(".hand3").append(hand[2].up);
+        	$(".hand3 :last-child").removeClass("drag");
+	    }else
+	    if (deck.length + hand.length == 2) {
+	        $("#hand1").empty();
+        	$(".hand2").empty();
+        	$(".hand2").append(hand[0].up);
+        	$(".hand3").empty();
+        	$(".hand3").append(hand[1].up);
+        	$(".hand3 :last-child").removeClass("drag");
+	    }else
+	    if (deck.length + hand.length === 1) {
+	        $("#hand1").empty();
+        	$(".hand2").empty();
+        	$(".hand3").empty();
+        	$(".hand3").append(hand[0].up);
+	    }
+
+	
+	
+
+	rules();
+	
+}
+
+function oneDraw() {
+		if(deck.length >= 1) {
+		hand.unshift(deck.shift());seeDeck();
+	}
+	
+	$("#hand2").empty();
+	$("#hand1").empty();
+	
+	$("#hand3").empty();
+	$("#hand3").append(hand[0].up);
+
+
+	rules();
+}
+
+</script>
+	</head>
+	<body>
+		
+		<div id="playArea">
+			
+			
+		
+		
+			<div id="deckSlot" class="cardArea">
+				<div id="contdck" class="deckHold">
+
+				</div>
+			</div>
+			<div id="hand" class="hand, cardArea">
+				<div id="handbox">
+					<div id="handpreview"></div>
+					<div id="hand3" class="hand3">
+				<!--	<div class="toplft , dr3"></div>
+					<div class="mid , dr3"></div>
+					<div class="btmrt , dr3"></div>-->
+				</div>
+				<div id="hand2" class="hand2">
+				<!--	<div class="toplft , dr2"></div>
+					<div class="mid , dr2"></div>
+					<div class="btmrt , dr2"></div>-->
+				</div>
+				<div id="hand1" class=" hand1">
+				<!--	<div class=" toplft , dr1 "></div>
+					<div class="mid , dr1"></div>
+					<div class="btmrt , dr1"></div>**//-->
+				</div>
+				</div>
+			</div>
+			
+			<div id="complete" class="complete">
+			<div id="cbox">
+				<div id="suitA" class="suitA, cardArea"></div>
+
+				<div id="suitB" class="suitB, cardArea"></div>
+			
+				<div id="suitC" class="suitC, cardArea"></div>
+
+				<div id="suitD" class="suitD, cardArea"></div>
+			</div>
+			</div>
+			
+	  
+			<div id="inPlay">
+			
+				<div id="first" class="first , cardArea , play"></div>
+			
+				<div id="second" class="second , cardArea , play"></div>
+			
+				<div id="third" class="third , cardArea , play"></div>
+			
+				<div id="fourth" class="fourth , cardArea , play"></div>
+			
+				<div id="fifth" class="fifth , cardArea , play"></div>
+			
+				<div id="sixth" class="sixth , cardArea , play"></div>
+			
+				<div id="seventh" class="seventh , cardArea , play"></div>
+			
+			</div>
+		
+			<div id="popSett">
+			<button id="close" class="close">X</button>
+			
+			
+			<br>
+			<h2>Menu</h2><br>
+			<div class="new , butt">New Game</div>
+			<!--<br>-->
+			<br>
+			<br>
+			<div id="win1" class="riight, wincount">Games won:</div>
+			<div class="setting , rainbow">Background Colour:</div>
+			<div class="colourBox">
+				<div class="redz , colour"></div>
+				<div class="blue , colour"></div>
+				<div class="green , colour"></div>
+				<div class="yellow , colour"></div>
+				<div class="purple , colour"></div>
+				<div class="orange , colour"></div>
+				<div class="pink , colour"></div>
+				<div class="goldenrod , colour"></div>
+				<div class="indigo , colour"></div>
+				<div class="darkgray , colour"></div>
+			</div>
+			<br>
+			<div id="drawselectbox">
+				<div id="draw3" class="butt , press">Draw 3 cards</div>
+				<div id="draw1" class="butt">Draw 1 card</div>
+			</div>
+			</div>
+			<div id="dots" class="noselect , butt">•••Menu•••</div>
+			
+			<div id="winner" class="winner">
+				<h1>You win!</h1>
+				<div class="new , butt">New Game?</div><br><br>
+		<div class="wincount"></div>
+			</div>
+		</div>
+	</body>
+</html>
